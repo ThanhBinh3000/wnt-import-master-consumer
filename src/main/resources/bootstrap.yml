@@ -1,7 +1,7 @@
 # Spring
 spring:
   application:
-    name: wnt-inventory-consumer
+    name: wnt-import-master-consumer
   profiles:
     active: prod
   cloud:
