@@ -83,6 +83,8 @@ public class NhaCungCapsServiceImpl extends BaseServiceImpl<NhaCungCaps, NhaCung
 		e.setCreated(Date.from(Instant.now()));
 		e.setCreatedByUserId(dataNhaCungCaps.getProfile().getId());
 		e.setRecordStatusId(RecordStatusContains.ACTIVE);
+		e.setIsOrganization(0);
+		e.setSupplierTypeId(0);
 		e = hdrRepo.save(e);
 		if (e.getNoDauKy() != null && e.getId() > 0){
 			taoPhieuDauKy(storeCode, e.getId(), dataNhaCungCaps.getProfile().getId(), e.getNoDauKy().doubleValue(), dataNhaCungCaps.getProfile().getNhaThuoc().getId());
