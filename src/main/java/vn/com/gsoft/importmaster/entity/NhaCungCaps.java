@@ -20,8 +20,6 @@ public class NhaCungCaps extends BaseEntity {
     @Column(name="id")
     private Long id;
 
-    @Column(name = "MaNhaCungCap")
-    private Integer maNhaCungCap;
     @Column(name = "TenNhaCungCap")
     private String tenNhaCungCap;
     @Column(name = "DiaChi")
@@ -48,8 +46,8 @@ public class NhaCungCaps extends BaseEntity {
     private Boolean active;
     @Column(name = "SupplierTypeId")
     private Integer supplierTypeId;
-    @Column(name = "RecordStatusID")
-    private Integer recordStatusID;
+//    @Column(name = "RecordStatusID")
+//    private Integer recordStatusID;
     @Column(name = "BarCode")
     private String barCode;
     @Column(name = "DiaBanHoatDong")
@@ -74,5 +72,11 @@ public class NhaCungCaps extends BaseEntity {
     private Integer mappingStoreId;
     @Column(name = "IsOrganization")
     private Integer isOrganization;
+//    @Column(name = "RecordStatusId")
+//    private Long recordStatusId;
+    @Transient
+    private  NhomNhaCungCaps nhomNhaCungCaps;
+    @Transient
+    private  String tenNhomNhaCungCaps;
 }
 

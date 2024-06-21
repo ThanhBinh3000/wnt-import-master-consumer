@@ -15,7 +15,6 @@ import java.util.Optional;
 public interface NhaCungCapsRepository extends BaseRepository<NhaCungCaps, NhaCungCapsReq, Long> {
   @Query("SELECT c FROM NhaCungCaps c " +
          "WHERE 1=1 "
-          + " AND (:#{#param.maNhaCungCap} IS NULL OR c.maNhaCungCap = :#{#param.maNhaCungCap}) "
           + " AND (:#{#param.tenNhaCungCap} IS NULL OR lower(c.tenNhaCungCap) LIKE lower(concat('%',CONCAT(:#{#param.tenNhaCungCap},'%'))))"
           + " AND (:#{#param.diaChi} IS NULL OR lower(c.diaChi) LIKE lower(concat('%',CONCAT(:#{#param.diaChi},'%'))))"
           + " AND (:#{#param.soDienThoai} IS NULL OR lower(c.soDienThoai) LIKE lower(concat('%',CONCAT(:#{#param.soDienThoai},'%'))))"
@@ -30,7 +29,6 @@ public interface NhaCungCapsRepository extends BaseRepository<NhaCungCaps, NhaCu
           + " AND (:#{#param.createdByUserId} IS NULL OR c.createdByUserId = :#{#param.createdByUserId}) "
           + " AND (:#{#param.modifiedByUserId} IS NULL OR c.modifiedByUserId = :#{#param.modifiedByUserId}) "
           + " AND (:#{#param.supplierTypeId} IS NULL OR c.supplierTypeId = :#{#param.supplierTypeId}) "
-          + " AND (:#{#param.recordStatusID} IS NULL OR c.recordStatusID = :#{#param.recordStatusID}) "
           + " AND (:#{#param.barCode} IS NULL OR lower(c.barCode) LIKE lower(concat('%',CONCAT(:#{#param.barCode},'%'))))"
           + " AND (:#{#param.diaBanHoatDong} IS NULL OR lower(c.diaBanHoatDong) LIKE lower(concat('%',CONCAT(:#{#param.diaBanHoatDong},'%'))))"
           + " AND (:#{#param.website} IS NULL OR lower(c.website) LIKE lower(concat('%',CONCAT(:#{#param.website},'%'))))"
@@ -43,14 +41,12 @@ public interface NhaCungCapsRepository extends BaseRepository<NhaCungCaps, NhaCu
           + " AND (:#{#param.code} IS NULL OR lower(c.code) LIKE lower(concat('%',CONCAT(:#{#param.code},'%'))))"
           + " AND (:#{#param.mappingStoreId} IS NULL OR c.mappingStoreId = :#{#param.mappingStoreId}) "
           + " AND (:#{#param.isOrganization} IS NULL OR c.isOrganization = :#{#param.isOrganization}) "
-          + " ORDER BY c.maNhaCungCap desc"
   )
   Page<NhaCungCaps> searchPage(@Param("param") NhaCungCapsReq param, Pageable pageable);
   
   
   @Query("SELECT c FROM NhaCungCaps c " +
          "WHERE 1=1 "
-          + " AND (:#{#param.maNhaCungCap} IS NULL OR c.maNhaCungCap = :#{#param.maNhaCungCap}) "
           + " AND (:#{#param.tenNhaCungCap} IS NULL OR lower(c.tenNhaCungCap) LIKE lower(concat('%',CONCAT(:#{#param.tenNhaCungCap},'%'))))"
           + " AND (:#{#param.diaChi} IS NULL OR lower(c.diaChi) LIKE lower(concat('%',CONCAT(:#{#param.diaChi},'%'))))"
           + " AND (:#{#param.soDienThoai} IS NULL OR lower(c.soDienThoai) LIKE lower(concat('%',CONCAT(:#{#param.soDienThoai},'%'))))"
@@ -65,7 +61,6 @@ public interface NhaCungCapsRepository extends BaseRepository<NhaCungCaps, NhaCu
           + " AND (:#{#param.createdByUserId} IS NULL OR c.createdByUserId = :#{#param.createdByUserId}) "
           + " AND (:#{#param.modifiedByUserId} IS NULL OR c.modifiedByUserId = :#{#param.modifiedByUserId}) "
           + " AND (:#{#param.supplierTypeId} IS NULL OR c.supplierTypeId = :#{#param.supplierTypeId}) "
-          + " AND (:#{#param.recordStatusID} IS NULL OR c.recordStatusID = :#{#param.recordStatusID}) "
           + " AND (:#{#param.barCode} IS NULL OR lower(c.barCode) LIKE lower(concat('%',CONCAT(:#{#param.barCode},'%'))))"
           + " AND (:#{#param.diaBanHoatDong} IS NULL OR lower(c.diaBanHoatDong) LIKE lower(concat('%',CONCAT(:#{#param.diaBanHoatDong},'%'))))"
           + " AND (:#{#param.website} IS NULL OR lower(c.website) LIKE lower(concat('%',CONCAT(:#{#param.website},'%'))))"
@@ -78,9 +73,32 @@ public interface NhaCungCapsRepository extends BaseRepository<NhaCungCaps, NhaCu
           + " AND (:#{#param.code} IS NULL OR lower(c.code) LIKE lower(concat('%',CONCAT(:#{#param.code},'%'))))"
           + " AND (:#{#param.mappingStoreId} IS NULL OR c.mappingStoreId = :#{#param.mappingStoreId}) "
           + " AND (:#{#param.isOrganization} IS NULL OR c.isOrganization = :#{#param.isOrganization}) "
-          + " ORDER BY c.maNhaCungCap desc"
   )
   List<NhaCungCaps> searchList(@Param("param") NhaCungCapsReq param);
   @Query("SELECT ncc FROM NhaCungCaps ncc where ncc.supplierTypeId=1 and ncc.maNhaThuoc= ?1 ")
   Optional<NhaCungCaps> findKhachHangLe(String storeCode);
+
+  @Query(value = "SELECT c.Id FROM NhaCungCaps c WHERE 1=1" +
+          " AND c.MaNhaThuoc = :storeCode AND c.TenNhaCungCap = :name" +
+          " AND (:id IS NULL OR c.Id != :id)" +
+          " AND c.RecordStatusId != 3"
+          , nativeQuery = true)
+  List<Long> findNhaCungCapByName(@Param("storeCode") String storeCode, @Param("name") String name,
+                                  @Param("id") Long id);
+
+  @Query(value = "SELECT c.Id FROM NhaCungCaps c WHERE 1=1" +
+          " AND c.MaNhaThuoc = :storeCode AND c.Barcode = :barcode" +
+          " AND (:id IS NULL OR c.Id != :id)" +
+          " AND c.RecordStatusId != 3"
+          , nativeQuery = true)
+  List<Long> findNhaCungCapByBarcode(@Param("storeCode") String storeCode, @Param("barcode") String name,
+                                     @Param("id") Long id);
+
+  @Query(value = "SELECT c.Id FROM NhaCungCaps c WHERE 1=1" +
+          " AND c.MaNhaThuoc = :storeCode AND c.Code = :code" +
+          " AND (:id IS NULL OR c.Id != :id)" +
+          " AND c.RecordStatusId != 3"
+          , nativeQuery = true)
+  List<Long> findNhaCungCapByCode(@Param("storeCode") String storeCode, @Param("code") String name,
+                                  @Param("id") Long id);
 }

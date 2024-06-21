@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import vn.com.gsoft.importmaster.constant.ImportConstant;
 import vn.com.gsoft.importmaster.model.system.WrapData;
 import vn.com.gsoft.importmaster.service.BacSiesService;
+import vn.com.gsoft.importmaster.service.NhaCungCapsService;
 
 import java.time.*;
 import java.util.Date;
@@ -25,6 +26,8 @@ import java.util.Date;
 public class ImportMasterConsumer {
     @Autowired
     private BacSiesService bacSiesService;
+    @Autowired
+    private NhaCungCapsService nhaCungCapsService;
 
     @KafkaListener(topics = "#{'${wnt.kafka.internal.consumer.topic.import-master}'}", groupId = "#{'${wnt.kafka.internal.consumer.group-id}'}", containerFactory = "kafkaInternalListenerContainerFactory")
     public void receiveExternal(@Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
@@ -54,6 +57,8 @@ public class ImportMasterConsumer {
             switch (wrapData.getCode()){
                 case ImportConstant.BAC_SI:
                     bacSiesService.save(payload);
+                case ImportConstant.NHA_CUNG_CAP:
+                    nhaCungCapsService.save(payload);
                 default:
                     log.error("Mã code chưa đuược cấu hình");
             }
