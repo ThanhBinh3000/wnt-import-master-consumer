@@ -21,7 +21,7 @@ import java.util.UUID;
 public class PhieuNhaps extends BaseEntity {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "SoPhieuNhap")
     private Long soPhieuNhap;
@@ -32,13 +32,13 @@ public class PhieuNhaps extends BaseEntity {
     @Column(name = "DienGiai")
     private String dienGiai;
     @Column(name = "TongTien")
-    private BigDecimal tongTien;
+    private Double tongTien;
     @Column(name = "DaTra")
-    private BigDecimal daTra;
+    private Double daTra;
     @Column(name = "NhaThuoc_MaNhaThuoc")
     private String nhaThuocMaNhaThuoc;
     @Column(name = "LoaiXuatNhap_MaLoaiXuatNhap")
-    private Integer loaiXuatNhapMaLoaiXuatNhap;
+    private Long loaiXuatNhapMaLoaiXuatNhap;
     @Column(name = "NhaCungCap_MaNhaCungCap")
     private Long nhaCungCapMaNhaCungCap;
     @Column(name = "KhachHang_MaKhachHang")
@@ -120,7 +120,6 @@ public class PhieuNhaps extends BaseEntity {
     @Lob
     @Column(name = "LinkFile")
     private String linkFile;
-
     @Column(name = "Discount")
     private Double discount;
     @Column(name = "TargetManagementId")

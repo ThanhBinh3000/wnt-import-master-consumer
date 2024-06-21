@@ -27,7 +27,6 @@ public class NhaCungCapsReq extends BaseRequest {
     private Integer modifiedByUserId;
     private Boolean active;
     private Integer supplierTypeId;
-    private Integer recordStatusID;
     private String barCode;
     private String diaBanHoatDong;
     private String website;
@@ -40,5 +39,8 @@ public class NhaCungCapsReq extends BaseRequest {
     private String code;
     private Integer mappingStoreId;
     private Integer isOrganization;
+    private Long recordStatusId;
+    private String barcode;
+    private Boolean dataDelete;
 }
 

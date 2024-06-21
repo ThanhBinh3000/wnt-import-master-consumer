@@ -103,4 +103,10 @@ public interface PhieuNhapsRepository extends BaseRepository<PhieuNhaps, PhieuNh
     )
     List<PhieuNhaps> searchList(@Param("param") PhieuNhapsReq param);
 
+    PhieuNhaps findByNhaThuocMaNhaThuocAndNhaCungCapMaNhaCungCapAndLoaiXuatNhapMaLoaiXuatNhapAndRecordStatusId(
+            String nhaThuocMaNhaThuoc,
+            Long nhaCungCapMaNhaCungCap,
+            Integer maLoaiXuatNhap,
+            Integer recordStatusId);
+
 }
