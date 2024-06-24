@@ -12,12 +12,18 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 import vn.com.gsoft.importmaster.constant.ImportConstant;
+import vn.com.gsoft.importmaster.entity.Process;
+import vn.com.gsoft.importmaster.entity.ProcessDtl;
 import vn.com.gsoft.importmaster.model.system.WrapData;
+import vn.com.gsoft.importmaster.repository.ProcessDtlRepository;
+import vn.com.gsoft.importmaster.repository.ProcessRepository;
 import vn.com.gsoft.importmaster.service.BacSiesService;
 import vn.com.gsoft.importmaster.service.NhaCungCapsService;
 
 import java.time.*;
 import java.util.Date;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RefreshScope
@@ -28,6 +34,10 @@ public class ImportMasterConsumer {
     private BacSiesService bacSiesService;
     @Autowired
     private NhaCungCapsService nhaCungCapsService;
+    @Autowired
+    private ProcessRepository processRepository;
+    @Autowired
+    private ProcessDtlRepository processDtlRepository;
 
     @KafkaListener(topics = "#{'${wnt.kafka.internal.consumer.topic.import-master}'}", groupId = "#{'${wnt.kafka.internal.consumer.group-id}'}", containerFactory = "kafkaInternalListenerContainerFactory")
     public void receiveExternal(@Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
@@ -53,8 +63,18 @@ public class ImportMasterConsumer {
         long minutes = duration.toMinutes() % 60;
         long seconds = duration.getSeconds() % 60;
         log.info("Khoảng thời gian trong queue theo giờ, phút, giây: {} giờ {} phút {} giây", hours, minutes, seconds);
+        Optional<Process> processOpt = processRepository.findByBatchKey(wrapData.getBatchKey());
+        Optional<ProcessDtl> processDtlOpt = processDtlRepository.findByBatchKeyAndIndex(wrapData.getBatchKey(), wrapData.getIndex());
+        if (processOpt.isPresent()) {
+            processOpt.get().setStatus(1);
+            processRepository.save(processOpt.get());
+        }
+        if (processDtlOpt.isPresent()) {
+            processDtlOpt.get().setStatus(1);
+            processDtlRepository.save(processDtlOpt.get());
+        }
         try {
-            switch (wrapData.getCode()){
+            switch (wrapData.getCode()) {
                 case ImportConstant.BAC_SI:
                     bacSiesService.save(payload);
                 case ImportConstant.NHA_CUNG_CAP:
@@ -62,8 +82,36 @@ public class ImportMasterConsumer {
                 default:
                     log.error("Mã code chưa đuược cấu hình");
             }
-        }catch (Exception e){
+            // done
+            if (processDtlOpt.isPresent()) {
+                processDtlOpt.get().setStatus(2);
+                processDtlOpt.get().setReturnCode(0);
+                processDtlRepository.save(processDtlOpt.get());
+            }
+            if (processOpt.isPresent() && processOpt.get().getReturnCode() == null) {
+                processOpt.get().setReturnCode(0);
+                processRepository.save(processOpt.get());
+            }
+        } catch (Exception e) {
             e.printStackTrace();
+            log.error("Xảy ra lỗi: Code {}, Index: {}, Total: {}", wrapData.getCode(), wrapData.getIndex(), wrapData.getTotal());
+            // error
+            if (processDtlOpt.isPresent()) {
+                processDtlOpt.get().setStatus(2);
+                processDtlOpt.get().setReturnCode(1);
+                processDtlRepository.save(processDtlOpt.get());
+            }
+            if (processOpt.isPresent()) {
+                processOpt.get().setReturnCode(1);
+                processRepository.save(processOpt.get());
+            }
+        }finally {
+            if (Objects.equals(wrapData.getTotal(), wrapData.getIndex())){
+                if (processOpt.isPresent()) {
+                    processOpt.get().setStatus(2);
+                    processRepository.save(processOpt.get());
+                }
+            }
         }
     }
 }
