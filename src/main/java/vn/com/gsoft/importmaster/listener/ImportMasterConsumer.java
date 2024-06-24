@@ -18,6 +18,7 @@ import vn.com.gsoft.importmaster.model.system.WrapData;
 import vn.com.gsoft.importmaster.repository.ProcessDtlRepository;
 import vn.com.gsoft.importmaster.repository.ProcessRepository;
 import vn.com.gsoft.importmaster.service.BacSiesService;
+import vn.com.gsoft.importmaster.service.KhachHangService;
 import vn.com.gsoft.importmaster.service.NhaCungCapsService;
 
 import java.time.*;
@@ -32,12 +33,15 @@ import java.util.Optional;
 public class ImportMasterConsumer {
     @Autowired
     private BacSiesService bacSiesService;
+    @Autowired 
+    private KhachHangService khachHangService;
     @Autowired
     private NhaCungCapsService nhaCungCapsService;
     @Autowired
     private ProcessRepository processRepository;
     @Autowired
     private ProcessDtlRepository processDtlRepository;
+
 
     @KafkaListener(topics = "#{'${wnt.kafka.internal.consumer.topic.import-master}'}", groupId = "#{'${wnt.kafka.internal.consumer.group-id}'}", containerFactory = "kafkaInternalListenerContainerFactory")
     public void receiveExternal(@Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
@@ -77,6 +81,10 @@ public class ImportMasterConsumer {
             switch (wrapData.getCode()) {
                 case ImportConstant.BAC_SI:
                     bacSiesService.save(payload);
+                    break;
+                case ImportConstant.KHACH_HANG:
+                    khachHangService.save(payload);
+                    break;
                 case ImportConstant.NHA_CUNG_CAP:
                     nhaCungCapsService.save(payload);
                 default:

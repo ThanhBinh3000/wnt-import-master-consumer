@@ -141,4 +141,9 @@ public interface PhieuXuatsRepository extends BaseRepository<PhieuXuats, PhieuXu
     Long findBySoPhieuXuatMax(String storeCode, Integer maLoaiXuatNhap);
 
     Optional<PhieuXuats> findBySoPhieuXuatAndMaLoaiXuatNhap(Long soPhieuXuat, Integer maLoaiXuatNhap);
+    PhieuXuats findByNhaThuocMaNhaThuocAndKhachHangMaKhachHangAndMaLoaiXuatNhapAndRecordStatusId(
+            String nhaThuocMaNhaThuoc,
+            Long khachHangMaKhachHang,
+            Integer maLoaiXuatNhap,
+            Integer recordStatusId);
 }

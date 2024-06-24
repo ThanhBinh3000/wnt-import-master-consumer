@@ -101,5 +101,7 @@ public class KhachHangs extends BaseEntity {
     private String abilityToPay;
     @Column(name = "ZaloId")
     private String zaloId;
+    @Transient
+    private String tenNhomKhachHang;
 }
 
