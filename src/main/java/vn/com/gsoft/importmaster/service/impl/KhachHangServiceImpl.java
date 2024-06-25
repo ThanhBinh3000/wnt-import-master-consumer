@@ -10,7 +10,6 @@ import vn.com.gsoft.importmaster.entity.BacSies;
 import vn.com.gsoft.importmaster.entity.KhachHangs;
 import vn.com.gsoft.importmaster.entity.NhomKhachHangs;
 import vn.com.gsoft.importmaster.entity.PhieuXuats;
-import vn.com.gsoft.importmaster.model.dto.WrapDataBacSis;
 import vn.com.gsoft.importmaster.model.dto.WrapDataKhachHangs;
 import vn.com.gsoft.importmaster.model.system.Profile;
 import vn.com.gsoft.importmaster.repository.BacSiesRepository;
