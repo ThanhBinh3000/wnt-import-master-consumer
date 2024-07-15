@@ -20,6 +20,7 @@ import vn.com.gsoft.importmaster.repository.ProcessRepository;
 import vn.com.gsoft.importmaster.service.BacSiesService;
 import vn.com.gsoft.importmaster.service.KhachHangService;
 import vn.com.gsoft.importmaster.service.NhaCungCapsService;
+import vn.com.gsoft.importmaster.service.ThuocsService;
 
 import java.time.*;
 import java.util.Date;
@@ -37,6 +38,8 @@ public class ImportMasterConsumer {
     private KhachHangService khachHangService;
     @Autowired
     private NhaCungCapsService nhaCungCapsService;
+    @Autowired
+    private ThuocsService thuocsService;
     @Autowired
     private ProcessRepository processRepository;
     @Autowired
@@ -87,6 +90,8 @@ public class ImportMasterConsumer {
                     break;
                 case ImportConstant.NHA_CUNG_CAP:
                     nhaCungCapsService.save(payload);
+                case ImportConstant.THUOC:
+                    thuocsService.save(payload);
                 default:
                     log.error("Mã code chưa đuược cấu hình");
             }

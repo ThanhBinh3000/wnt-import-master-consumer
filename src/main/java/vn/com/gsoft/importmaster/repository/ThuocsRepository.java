@@ -9,6 +9,7 @@ import vn.com.gsoft.importmaster.entity.Thuocs;
 import vn.com.gsoft.importmaster.model.dto.ThuocsReq;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ThuocsRepository extends BaseRepository<Thuocs, ThuocsReq, Long> {
@@ -224,4 +225,13 @@ public interface ThuocsRepository extends BaseRepository<Thuocs, ThuocsReq, Long
             + " ORDER BY c.id desc"
     )
     List<Thuocs> searchList(@Param("param") ThuocsReq param);
+
+    @Query("SELECT t FROM Thuocs t WHERE t.maThuoc = :maThuoc AND (t.nhaThuocMaNhaThuoc = :maNhaThuoc OR t.nhaThuocMaNhaThuoc = :maNhaCha) AND t.recordStatusId = :recordStatusId")
+    Optional<Thuocs> findByMaThuoc(String maThuoc, String maNhaThuoc, String maNhaCha, Long recordStatusId);
+
+    @Query("SELECT t FROM Thuocs t WHERE t.tenThuoc = :tenThuoc AND (t.nhaThuocMaNhaThuoc = :maNhaThuoc OR t.nhaThuocMaNhaThuoc = :maNhaCha) AND t.recordStatusId = :recordStatusId")
+    Optional<Thuocs> findByTenThuoc(String tenThuoc, String maNhaThuoc, String maNhaCha, Long recordStatusId);
+
+    @Query("SELECT t FROM Thuocs t WHERE t.barCode = :barCode AND (t.nhaThuocMaNhaThuoc = :maNhaThuoc OR t.nhaThuocMaNhaThuoc = :maNhaCha) AND t.recordStatusId = :recordStatusId")
+    Optional<Thuocs> findByBarCode(String barCode, String maNhaThuoc, String maNhaCha, Long recordStatusId);
 }
