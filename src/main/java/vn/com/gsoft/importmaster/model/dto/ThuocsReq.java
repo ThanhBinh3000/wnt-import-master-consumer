@@ -1,9 +1,12 @@
 package vn.com.gsoft.importmaster.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import vn.com.gsoft.importmaster.model.system.BaseRequest;
 
 import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 @Data
 public class ThuocsReq extends BaseRequest {
@@ -117,5 +120,13 @@ public class ThuocsReq extends BaseRequest {
     private Long userIdMapping;
 
     private Boolean dataDelete;
+    private String nhomThuocTenNhomThuoc;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    private Date hanDung;
+
+
+    private Long nhaCungCapMaNhaCungCap;
+    private List<ReplaceGoodsAndBundleGoodsReq> bundleGoods;
+    private List<ReplaceGoodsAndBundleGoodsReq> replaceGoods;
 }
 
